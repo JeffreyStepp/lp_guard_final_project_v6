@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LP Guard Position Planner uses live decentralized-exchange market data to help users explore concentrated-liquidity ranges and asset exposure.">
+  <title>LP Guard | Live Position Planner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header" id="home">
+    <div class="container nav-shell">
+      <a class="brand" href="#home" aria-label="LP Guard home">
+        <span class="brand-mark" aria-hidden="true">LP</span>
+        <span>LP Guard</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#market">Live Market</a>
+        <a href="#planner">Planner</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About</a>
+        <a href="#feedback">Feedback</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero section">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">LIVE DATA + RANGE ANALYSIS</p>
+          <h1>Understand the range before you deploy the capital.</h1>
+          <p class="hero-text">
+            LP Guard is a simplified educational planner for concentrated-liquidity positions.
+            Load live ETH market data, define a price range, and see how that range changes your
+            projected ETH and stablecoin exposure.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#market">Load Live Market Data</a>
+            <a class="button button-secondary" href="#planner">Plan a Position</a>
+          </div>
+          <p class="hero-note">Educational planning tool only. No wallet connection and no transactions.</p>
+        </div>
+
+        <aside class="hero-panel" aria-label="LP Guard workflow summary">
+          <div class="signal-row"><span>MARKET</span><strong>Observe</strong></div>
+          <div class="signal-row"><span>RANGE</span><strong>Define</strong></div>
+          <div class="signal-row"><span>EXPOSURE</span><strong>Measure</strong></div>
+          <div class="signal-row"><span>DECISION</span><strong>User controlled</strong></div>
+          <div class="hero-status"><span class="status-dot"></span> Read-only planning mode</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="market">
+      <div class="container">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">API-POWERED FEATURE</p>
+            <h2>Live ETH Market Snapshot</h2>
+            <p>Choose a network, then request current WETH/USDC decentralized-exchange market data.</p>
+          </div>
+          <div class="source-chip">Source: DEX Screener API</div>
+        </div>
+
+        <div class="market-layout">
+          <form class="control-card" id="market-form">
+            <div class="field-group">
+              <label for="network">Network</label>
+              <select id="network" name="network">
+                <option value="base">Base</option>
+                <option value="arbitrum">Arbitrum</option>
+                <option value="ethereum">Ethereum</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="quote-token">Stablecoin</label>
+              <input id="quote-token" name="quoteToken" type="text" value="USDC" readonly aria-readonly="true">
+            </div>
+
+            <button class="button button-primary button-full" type="submit">Load Live Data</button>
+            <p class="helper-text">The app checks WETH and USDC market data for the selected network and uses the most liquid direct WETH/USDC pair it finds.</p>
+          </form>
+
+          <div class="market-result" id="market-result" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-icon" aria-hidden="true">↗</span>
+              <h3>Ready for market data</h3>
+              <p>Select a network and click <strong>Load Live Data</strong> to request the WETH/USDC market.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="planner">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">POSITION PLANNER</p>
+          <h2>Define a concentrated-liquidity range</h2>
+          <p>The planner reuses the range-and-composition model from the larger LP Guard project, simplified for a browser-based educational tool.</p>
+        </div>
+
+        <div class="planner-layout">
+          <form class="planner-card" id="planner-form">
+            <div class="field-grid">
+              <div class="field-group">
+                <label for="current-price">Current ETH Price ($)</label>
+                <input id="current-price" name="currentPrice" type="number" min="0.01" step="0.01" placeholder="3000" required>
+              </div>
+              <div class="field-group">
+                <label for="capital">Capital ($)</label>
+                <input id="capital" name="capital" type="number" min="1" step="0.01" value="1000" required>
+              </div>
+              <div class="field-group">
+                <label for="lower-range">Lower Range ($)</label>
+                <input id="lower-range" name="lowerRange" type="number" min="0.01" step="0.01" placeholder="2700" required>
+              </div>
+              <div class="field-group">
+                <label for="upper-range">Upper Range ($)</label>
+                <input id="upper-range" name="upperRange" type="number" min="0.01" step="0.01" placeholder="3300" required>
+              </div>
+            </div>
+
+            <div class="range-tools" aria-label="Range helpers">
+              <span>Quick range:</span>
+              <button type="button" class="mini-button range-preset" data-range="5">±5%</button>
+              <button type="button" class="mini-button range-preset" data-range="10">±10%</button>
+              <button type="button" class="mini-button range-preset" data-range="15">±15%</button>
+            </div>
+
+            <div class="button-row">
+              <button class="button button-primary" type="submit">Analyze Position</button>
+              <button class="button button-secondary" id="reset-planner" type="button">Reset</button>
+            </div>
+            <p class="helper-text">Live market data automatically fills the current-price field, but you can also enter a price manually.</p>
+          </form>
+
+          <div class="analysis-card" id="analysis-result" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-icon" aria-hidden="true">◎</span>
+              <h3>Position analysis</h3>
+              <p>Enter a current price, range, and capital amount to analyze the proposed position.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted" id="how-it-works">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">HOW IT WORKS</p>
+          <h2>From observation to decision</h2>
+          <p>This school project keeps the original LP Guard idea recognizable while deliberately leaving transaction execution out of scope.</p>
+        </div>
+
+        <div class="step-grid">
+          <article class="step-card">
+            <span class="step-number">01</span>
+            <h3>Observe the market</h3>
+            <p>Request live price, 24-hour price change, volume, and liquidity from DEX Screener.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">02</span>
+            <h3>Define the range</h3>
+            <p>Choose lower and upper boundaries around the current ETH price and enter the capital being planned.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">03</span>
+            <h3>Measure exposure</h3>
+            <p>LP Guard calculates range status and estimates the value split between ETH and the selected stablecoin.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">04</span>
+            <h3>Keep the user in control</h3>
+            <p>The result is information for a human decision. This website does not connect a wallet, sign, swap, mint, or rebalance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div>
+          <p class="eyebrow">ABOUT THE PROJECT</p>
+          <h2>A small front-end view of a much larger LP Guard concept.</h2>
+          <p>
+            The larger LP Guard project separates operating responsibilities so that market observation,
+            accounting, analysis, user decisions, verification, and wallet execution do not collapse into one system.
+            This JavaScript version intentionally focuses on only two safe pieces: market observation and range analysis.
+          </p>
+        </div>
+
+        <div class="module-grid" aria-label="LP Guard modules">
+          <article class="module-card"><strong>Ledger</strong><span>Preserves facts and capital history.</span></article>
+          <article class="module-card"><strong>Risk</strong><span>Measures exposure without transaction authority.</span></article>
+          <article class="module-card"><strong>Optimize</strong><span>Compares alternatives without executing them.</span></article>
+          <article class="module-card"><strong>Guard</strong><span>Verifies intended operations before movement.</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="feedback">
+      <div class="container feedback-grid">
+        <div>
+          <p class="eyebrow">FEEDBACK</p>
+          <h2>Help improve the planner</h2>
+          <p>This form is a front-end demonstration. It validates the required fields and displays confirmation without sending data to a server.</p>
+        </div>
+
+        <form class="feedback-form" id="feedback-form">
+          <div class="field-group">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          <button class="button button-primary" type="submit">Submit Feedback</button>
+          <p class="form-message" id="feedback-message" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <p>LP Guard — JavaScript 102 Final Project</p>
+      <p>Live market data provided by <a href="https://dexscreener.com" target="_blank" rel="noopener noreferrer">DEX Screener</a>.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
